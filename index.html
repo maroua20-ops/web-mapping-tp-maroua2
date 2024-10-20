@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TP de Web Mapping - Welcome</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="leaflet.css" />
+
+    <!-- Leaflet JS -->
+    <script src="leaflet.js"></script>
+
+    <!-- GeoJSON (Importe ton fichier GeoJSON ici) -->
+    <script src="kama.geojson" type="text/javascript"></script>
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+        }
+
+        /* En-tête avec effet esthétique */
+        #header {
+            background-color: #04a7ec;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 28px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Date du jour et citation */
+        #date {
+            margin-top: 10px;
+            text-align: center;
+            color: #444;
+            font-size: 16px;
+        }
+        
+        #quote {
+            text-align: center;
+            font-style: italic;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        /* Carte avec bordure esthétique */
+        #map {
+            width: 80%;
+            height: 500px;
+            margin: 20px auto;
+            border: 2px solid #12b0fa;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Popups esthétiques */
+        .leaflet-popup-content-wrapper {
+            background-color: #f9f9f9;
+            color: #333;
+            font-family: 'Arial', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Section d'accueil -->
+    <div id="header">
+        Welcome to the Web Mapping TP!
+    </div>
+
+    <!-- Affichage de la date et citation inspirante -->
+    <div id="date"></div>
+    <div id="quote">"Success is not the key to happiness. Happiness is the key to success." - Albert Schweitzer</div>
+
+    <!-- Carte -->
+    <div id="map"></div>
+
+    <script>
+        // Fonction pour afficher la date actuelle
+        function displayDate() {
+            var today = new Date();
+            var date = today.toLocaleDateString('fr-FR', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            });
+            document.getElementById('date').innerHTML = "Date d'aujourd'hui : " + date;
+        }
+        displayDate();
+
+        // Initialisation de la carte centrée sur une position spécifique
+        var map = L.map('map').setView([33.97655137473346, -6.866696535339877], 12);
+
+        // Ajout des tuiles OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+         // Chargement des données GeoJSON avec des popups et des styles colorés
+         function onEachFeature(feature, layer) {
+    // does this feature have a property named popupContent?
+    if (feature.properties && feature.properties.Nom_Region) {
+        layer.bindPopup(feature.properties.Nom_Region);
+    }
+}
+function getColor(d) {
+    return  "#"+Math.floor(Math.random()*16777215).toString(16)
+}
+function style(feature) {
+    return {
+        fillColor: getColor(feature.properties.Nom_Region),
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7
+    };
+}
+
+L.geoJSON(maroua ,{onEachFeature: onEachFeature ,style: style}).addTo(map);
+
+    </script>
+</body>
+</html>
+
